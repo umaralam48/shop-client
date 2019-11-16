@@ -22,3 +22,7 @@
 .App-link {
   color: #09d3ac;
 }
+
+tr:nth-of-type(2n) {
+  background-color: #ebebeb;
+}

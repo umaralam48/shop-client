@@ -8,19 +8,20 @@ import Snackbar from "@material-ui/core/Snackbar";
 import SnackbarContent from "@material-ui/core/SnackbarContent";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ErrorIcon from "@material-ui/icons/Error";
-import { makeStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import { green } from "@material-ui/core/colors";
 import clsx from "clsx";
 import axios from "axios";
+import Context from "./dataContext";
 
 const variantIcon = {
   success: CheckCircleIcon,
   error: ErrorIcon
 };
 
-const useStyles1 = makeStyles(theme => ({
+const useStyles1 = withStyles(theme => ({
   success: {
-    backgroundColor: green[600]
+    backgroundColor: theme.palette.secondary.main
   },
   error: {
     backgroundColor: theme.palette.error.dark
@@ -43,9 +44,8 @@ const useStyles1 = makeStyles(theme => ({
   }
 }));
 
-function MySnackbarContentWrapper(props) {
-  const classes = useStyles1();
-  const { className, message, onClose, variant, ...other } = props;
+const MySnackbarContentWrapper = useStyles1(function(props) {
+  const { className, message, onClose, variant, classes, ...other } = props;
   const Icon = variantIcon[variant];
 
   return (
@@ -61,107 +61,166 @@ function MySnackbarContentWrapper(props) {
       {...other}
     />
   );
-}
+});
 
-export default function FormDialog(props) {
-  const { open, handleCloseParent, formData } = props;
-  const [isSnackOpen, setSnackOpen] = React.useState(false);
-  const [form, setFormData] = React.useState(formData);
-  const [snackbarVariant, setSnackbarVariant] = React.useState("");
-  const [snackbarMsg, setSnackbarMsg] = React.useState("");
-  const [formURL, setFormURL] = React.useState("");
-  const [title, setTitle] = React.useState("");
-  const FormToDisplay = props.form;
-  const classes = useStyles1();
-  console.log("dialog rerendering");
-  // if (props.form == "category") FormToDisplay = CategoryForm;
-  // else if (props.form == "additem") FormToDisplay = ItemForm;
-  // else (props.form == "addstock") FormToDisplay = CategoryForm;
+class FormDialog extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isSnackOpen: false,
+      form: props.formData,
+      snackbarVariant: "",
+      snackbarMessage: "",
+      formURL: "",
+      title: "",
+      sButton: "",
+      method: "",
+      handleCloseParent: props.handleCloseParent
+    };
 
-  React.useEffect(() => {
-    setFormData(props.formData);
-  }, [props.formData]);
+    this.handleClose = this.handleClose.bind(this);
+    this.setDialog = this.setDialog.bind(this);
+    this.handleForm = this.handleForm.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSnackClose = this.handleSnackClose.bind(this);
+  }
 
-  const handleClose = () => {
-    handleCloseParent();
+  componentWillReceiveProps(nextProps) {
+    // Any time props.email changes, update state.
+    if (nextProps.formData !== this.state.form) {
+      this.setState({
+        form: nextProps.formData
+      });
+    }
+  }
+
+  handleClose() {
+    this.state.handleCloseParent();
     console.log("Closing dialog");
-    setFormData({});
-  };
-  const handleForm = e => {
-    setFormData({ ...form, [e.target.name]: e.target.value });
-    console.log(form);
-  };
-  const handleSubmit = () => {
-    console.log(form);
-    axios
-      .post(formURL, form)
+    this.setState({
+      form: {}
+    });
+  }
+
+  setDialog(formAtt) {
+    const { URL, title, sButton, method } = formAtt;
+
+    this.setState({
+      formURL: URL,
+      title,
+      sButton,
+      method
+    });
+  }
+
+  handleForm(e) {
+    this.setState({
+      form: { ...this.state.form, [e.target.name]: e.target.value }
+    });
+  }
+
+  handleSubmit() {
+    const { method, formURL, form } = this.state;
+    axios({ method, url: formURL, data: form })
       .then(res => {
         console.log(res.data);
-        setSnackbarVariant("success");
-        setSnackbarMsg(res.data.success);
-        setSnackOpen(true);
-        handleClose();
+        this.setState({
+          snackbarVariant: "success",
+          snackbarMessage: res.data.success,
+          isSnackOpen: true
+        });
+        //console.log(this.context);
+        this.context.update(true);
+        this.handleClose();
       })
       .catch(err => {
         console.log(err);
-        setSnackbarVariant("error");
         if (err.response) {
           if (err.response.data.error.substr(0, 6) === "E11000")
-            setSnackbarMsg("Already exists !");
-          else setSnackbarMsg(err.response.data.error);
-          setSnackOpen(true);
+            this.setState({
+              snackbarVariant: "error",
+              snackbarMessage: "Already exists!",
+              isSnackOpen: true
+            });
+          else
+            this.setState({
+              snackbarVariant: "error",
+              snackbarMessage: err.response.data.error,
+              isSnackOpen: true
+            });
         } else {
-          setSnackbarMsg("Network error!");
-          setSnackOpen(true);
+          this.setState({
+            snackbarVariant: "error",
+            snackbarMessage: "Network error!",
+            isSnackOpen: true
+          });
         }
       });
-  };
+  }
 
-  const handleSnackClose = () => {
-    setSnackOpen(false);
-  };
+  handleSnackClose() {
+    this.setState({
+      isSnackOpen: false
+    });
+  }
 
-  return (
-    <div>
-      <Dialog
-        className={classes.dialog}
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">{title}</DialogTitle>
-        <DialogContent>
-          <FormToDisplay
-            handleForm={handleForm}
-            setFormURL={setFormURL}
-            setTitle={setTitle}
-            form={form || formData}
+  render() {
+    console.log("Dialog rerender");
+    console.log(this.state);
+    console.log(this.props);
+    const FormToDisplay = this.props.form;
+    const { classes, open } = this.props;
+    const {
+      title,
+      sButton,
+      form,
+      snackbarMessage,
+      snackbarVariant,
+      isSnackOpen
+    } = this.state;
+    return (
+      <>
+        <Dialog
+          className={classes.dialog}
+          open={open}
+          onClose={this.handleClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title">{title}</DialogTitle>
+          <DialogContent>
+            <FormToDisplay
+              handleForm={this.handleForm}
+              setDialog={this.setDialog}
+              form={form}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={this.handleSubmit} color="primary">
+              {sButton}
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          open={isSnackOpen}
+          autoHideDuration={2000}
+          onClose={this.handleSnackClose}
+        >
+          <MySnackbarContentWrapper
+            variant={snackbarVariant}
+            message={snackbarMessage}
           />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} color="primary">
-            Create
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Snackbar
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left"
-        }}
-        open={isSnackOpen}
-        autoHideDuration={2000}
-        onClose={handleSnackClose}
-      >
-        <MySnackbarContentWrapper
-          onClose={handleClose}
-          variant={snackbarVariant}
-          message={snackbarMsg}
-        />
-      </Snackbar>
-    </div>
-  );
+        </Snackbar>
+      </>
+    );
+  }
 }
+FormDialog.contextType = Context;
+
+export default useStyles1(FormDialog);

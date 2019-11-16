@@ -1,17 +1,28 @@
 import React from "react";
-import Context from "./categoryContext";
+import Context from "./dataContext";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
+import { withStyles } from "@material-ui/core/styles";
 
-export default function itemForm(props) {
+const useStyles = withStyles(theme => ({
+  inlineInput: {
+    display: "flex",
+    justifyContent: "space-around"
+  },
+  inlineFields: {}
+}));
+export default useStyles(function itemForm(props) {
+  const formAtt = {
+    URL: "/item/update/" + props.form._id,
+    title: "Update item",
+    sButton: "Update",
+    method: "post"
+  };
+
+  const { handleForm, setDialog, classes } = props;
+  setDialog(formAtt);
+
   if (props.form._id) {
-    const URL = "/item/update/" + props.form._id;
-    const title = "Add item";
-    const { handleForm, setFormURL, setTitle } = props;
-    console.log("form rerendering");
-    console.log(props.form);
-    setFormURL(URL);
-    setTitle(title);
     return (
       <Context.Consumer>
         {({ categories }) => (
@@ -27,16 +38,28 @@ export default function itemForm(props) {
               type="text"
               fullWidth
             />
-            <TextField
-              autoComplete="off"
-              value={props.form.price}
-              onChange={handleForm}
-              margin="dense"
-              name="price"
-              label="Price"
-              type="number"
-              fullWidth
-            />
+            <div className={classes.inlineInput}>
+              <TextField
+                className={classes.inlineFields}
+                value={props.form.price}
+                autoComplete="off"
+                onChange={handleForm}
+                margin="dense"
+                name="price"
+                label="Price"
+                type="number"
+              />
+              <TextField
+                className={classes.inlineFields}
+                value={props.form.size}
+                autoComplete="off"
+                onChange={handleForm}
+                margin="dense"
+                name="size"
+                label="Size"
+                type="number"
+              />
+            </div>
             <TextField
               select
               defaultValue=""
@@ -84,4 +107,4 @@ export default function itemForm(props) {
       </Context.Consumer>
     );
   } else return <></>;
-}
+});

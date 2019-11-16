@@ -13,26 +13,27 @@ const useStyles = withStyles(theme => ({
 }));
 export default useStyles(function itemForm(props) {
   const formAtt = {
-    URL: "/item",
-    title: "Add item",
-    sButton: "Create",
+    URL: "/stock",
+    title: "Add new stock",
+    sButton: "Add",
     method: "post"
   };
 
   const { handleForm, setDialog, classes } = props;
   setDialog(formAtt);
-  console.log("Item form rerender");
+
   return (
     <Context.Consumer>
       {({ categories }) => (
         <form>
           <TextField
-            color="secondary"
+            disabled
+            value={props.form.name}
             autoComplete="off"
             onChange={handleForm}
             autoFocus
             margin="dense"
-            name="name"
+            name="itemId"
             label="Item"
             type="text"
             fullWidth
@@ -44,7 +45,7 @@ export default useStyles(function itemForm(props) {
               onChange={handleForm}
               margin="dense"
               name="price"
-              label="Price"
+              label="Amount"
               type="number"
             />
             <TextField
@@ -52,13 +53,13 @@ export default useStyles(function itemForm(props) {
               autoComplete="off"
               onChange={handleForm}
               margin="dense"
-              name="size"
-              label="Size"
+              name="quantity"
+              label="Quantity"
               type="number"
             />
           </div>
 
-          <TextField
+          {/* <TextField
             select
             defaultValue=""
             autoComplete="off"
@@ -69,7 +70,7 @@ export default useStyles(function itemForm(props) {
             type="text"
             fullWidth
           >
-            {categories.map(option => {
+             {categories.map(option => {
               option = option ? option : "";
               return (
                 <MenuItem key={option.name} value={option._id}>
@@ -96,7 +97,7 @@ export default useStyles(function itemForm(props) {
             label="Container Size"
             type="number"
             fullWidth
-          />
+          /> */}
         </form>
       )}
     </Context.Consumer>

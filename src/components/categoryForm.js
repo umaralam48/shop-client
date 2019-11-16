@@ -2,11 +2,16 @@ import React from "react";
 
 import TextField from "@material-ui/core/TextField";
 export default function categoryForm(props) {
-  const URL = "/category/";
-  const title = "Add category";
-  const { handleForm, setFormURL, setTitle } = props;
-  setFormURL(URL);
-  setTitle(title);
+  const formAtt = {
+    URL: "/category/",
+    title: "Add category",
+    sButton: "Create",
+    method: "post"
+  };
+
+  const { handleForm, setDialog } = props;
+  setDialog(formAtt);
+
   return (
     <TextField
       onChange={handleForm}
