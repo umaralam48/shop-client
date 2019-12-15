@@ -80,7 +80,7 @@ class App extends Component {
 
   handleSubmit = search => {
     axios
-      .get("http://192.168.43.186:4000/item/" + search)
+      .get("item/" + search)
       .then(res => {
         //console.log(res.data);
         this.setState({
