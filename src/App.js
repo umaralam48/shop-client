@@ -8,6 +8,7 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import themeFile from "./util/theme";
 
 //axios.defaults.baseURL = "http://192.168.43.186:4000";
+///?/?console.log(?!(.err)) remove console.logs
 const theme = createMuiTheme(themeFile);
 class App extends Component {
   constructor(props) {
@@ -52,7 +53,7 @@ class App extends Component {
   fetchItems = async () => {
     try {
       let newitems = await axios.get("/item");
-      console.log(newitems);
+      //console.log(newitems);
       return newitems.data;
     } catch (err) {
       console.log(err);
@@ -63,7 +64,7 @@ class App extends Component {
   fetchCategories = async () => {
     try {
       let newcat = await axios.get("/category");
-      console.log(newcat);
+      //console.log(newcat);
       return newcat.data;
     } catch (err) {
       console.log(err);
@@ -73,7 +74,7 @@ class App extends Component {
 
   // updateCategories = async () => {
   //   let newcat = await this.getCategories();
-  //   console.log(newcat.data);
+  //   //console.log(newcat.data);
   //   this.setState({ categories: newcat.data });
   // };
 
@@ -81,7 +82,7 @@ class App extends Component {
     axios
       .get("http://192.168.43.186:4000/item/" + search)
       .then(res => {
-        console.log(res.data);
+        //console.log(res.data);
         this.setState({
           items: res.data
         });
@@ -89,8 +90,8 @@ class App extends Component {
       .catch(err => console.log(err));
   };
   render() {
-    console.log("APP rerendering");
-    console.log(this.state);
+    //console.log("APP rerendering");
+    //console.log(this.state);
     return (
       <Context.Provider
         value={{

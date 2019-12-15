@@ -96,7 +96,7 @@ class FormDialog extends React.PureComponent {
 
   handleClose() {
     this.state.handleCloseParent();
-    console.log("Closing dialog");
+    //console.log("Closing dialog");
     this.setState({
       form: {}
     });
@@ -123,7 +123,7 @@ class FormDialog extends React.PureComponent {
     const { method, formURL, form } = this.state;
     axios({ method, url: formURL, data: form })
       .then(res => {
-        console.log(res.data);
+        //console.log(res.data);
         this.setState({
           snackbarVariant: "success",
           snackbarMessage: res.data.success,
@@ -165,9 +165,9 @@ class FormDialog extends React.PureComponent {
   }
 
   render() {
-    console.log("Dialog rerender");
-    console.log(this.state);
-    console.log(this.props);
+    //console.log("Dialog rerender");
+    //console.log(this.state);
+    //console.log(this.props);
     const FormToDisplay = this.props.form;
     const { classes, open } = this.props;
     const {

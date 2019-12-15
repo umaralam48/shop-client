@@ -27,14 +27,14 @@ class item extends Component {
 
   handleDelete(e) {
     e.stopPropagation();
-    console.log("handling delete");
+    //console.log("handling delete");
 
     this.props.handlers.handleDelete(this.state.item);
   }
 
   handleStock(e) {
     e.stopPropagation();
-    console.log("handling stock");
+    //console.log("handling stock");
 
     this.props.handlers.handleStock(this.state.item);
   }

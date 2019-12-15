@@ -21,7 +21,7 @@ export default useStyles(function itemForm(props) {
 
   const { handleForm, setDialog, classes } = props;
   setDialog(formAtt);
-  console.log("Item form rerender");
+  //console.log("Item form rerender");
   return (
     <Context.Consumer>
       {({ categories }) => (

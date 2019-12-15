@@ -130,7 +130,7 @@ export default function PrimarySearchAppBar(props) {
     if (f === "Category") setDialogForm({ form: CategoryForm });
     else if (f === "Item") setDialogForm({ form: ItemForm });
     else setDialogForm({ form: CategoryForm });
-    console.log(dialogForm);
+    //console.log(dialogForm);
   };
   const handleDialogOpen = e => {
     MountForm(e.target.innerText);

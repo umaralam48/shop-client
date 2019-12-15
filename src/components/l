@@ -102,26 +102,26 @@ const { open, handleCloseParent, formData } = props;
     setFormData(props.formData);
   }, [props.formData]);
   //if (props.form == null) return <></>;
-  console.log("dialog rerendering");
-  console.log(form);
-  console.log(FormToDisplay);
-  console.log(method);
-  console.log(formURL);
+  //console.log("dialog rerendering");
+  //console.log(form);
+  //console.log(FormToDisplay);
+  //console.log(method);
+  //console.log(formURL);
 
   handleClose ()  {
     handleCloseParent();
-    console.log("Closing dialog");
+    //console.log("Closing dialog");
     setFormData({});
   };
   handleForm = e => {
     setFormData({ ...form, [e.target.name]: e.target.value });
-    console.log(form);
+    //console.log(form);
   };
   handleSubmit = () => {
-    console.log(form);
+    //console.log(form);
     axios({ method, url: formURL, data: form })
       .then(res => {
-        console.log(res.data);
+        //console.log(res.data);
         setSnackbarVariant("success");
         setSnackbarMsg(res.data.success);
         setSnackOpen(true);

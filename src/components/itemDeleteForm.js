@@ -2,8 +2,8 @@ import React from "react";
 
 import { Typography } from "@material-ui/core";
 export default function itemDeleteForm(props) {
-  console.log("rendering form");
-  console.log(props.form);
+  //console.log("rendering form");
+  //console.log(props.form);
   if (props.form) {
     const formAtt = {
       URL: "/item/" + props.form._id,

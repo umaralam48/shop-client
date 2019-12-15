@@ -50,11 +50,11 @@ class Items extends React.Component {
 
   handleUpdate(item) {
     this.setState({ item: item, dialogOpen: true, form: UpdateForm });
-    console.log(this.state.item);
+    //console.log(this.state.item);
   }
 
   handleDelete(item) {
-    console.log("handling delete at items");
+    //console.log("handling delete at items");
     this.setState({ item: item, dialogOpen: true, form: DeleteForm });
     //console.log(this.state.item);
   }
@@ -66,12 +66,12 @@ class Items extends React.Component {
   }
 
   handleStock(item) {
-    console.log("handling stock at items");
+    //console.log("handling stock at items");
     this.setState({ item: item, dialogOpen: true, form: StockForm });
   }
   render() {
-    console.log("items rerendering");
-    console.log(this.state.item);
+    //console.log("items rerendering");
+    //console.log(this.state.item);
     const { classes } = this.props;
     let items =
       this.props.items.length > 0 ? (
