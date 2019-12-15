@@ -7,7 +7,7 @@ import Context from "./components/dataContext";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import themeFile from "./util/theme";
 
-axios.defaults.baseURL = "http://192.168.43.186:4000";
+//axios.defaults.baseURL = "http://192.168.43.186:4000";
 const theme = createMuiTheme(themeFile);
 class App extends Component {
   constructor(props) {

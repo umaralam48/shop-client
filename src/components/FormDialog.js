@@ -86,7 +86,7 @@ class FormDialog extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    // Any time props.email changes, update state.
+    // Any time props.formData changes, update state.
     if (nextProps.formData !== this.state.form) {
       this.setState({
         form: nextProps.formData
